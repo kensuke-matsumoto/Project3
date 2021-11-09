@@ -32,7 +32,7 @@ namespace RPG
         {
             m_ChController = GetComponent<CharacterController>();
             m_PlayerInput = GetComponent<PlayerInput>();
-            m_CameraController = GetComponent<CameraController>();
+            m_CameraController = Camera.main.GetComponent<CameraController>();
             m_Animator = GetComponent<Animator>();
 
 
@@ -83,7 +83,7 @@ namespace RPG
 
             
               Vector3 cameraDirection = Quaternion.Euler(0,
-               m_CameraController.freeLookCamera.m_XAxis.Value
+               m_CameraController.PlayerCam.m_XAxis.Value
                , 0) * Vector3.forward;      //to be confirmed especially "cinemachine"  
               
                Quaternion targetRotation;            

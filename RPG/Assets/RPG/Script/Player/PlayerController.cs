@@ -12,6 +12,7 @@ namespace RPG
         public float rotationSpeed; 
         public float m_MaxRotationSpeed = 1200f;
         public float m_MinRotationSpeed = 800f;
+        public float gravity = 20.0f;
 
         private Quaternion m_TagetRotation;
              
@@ -25,6 +26,7 @@ namespace RPG
       
         private float m_DesiredForwardSpeed;
         private float m_ForwardSpeed;
+        private float m_VerticalSpeed;
         
         private readonly int m_HashForwardSpeed = Animator.StringToHash("ForwardSpeed");  
 
@@ -44,7 +46,8 @@ namespace RPG
         // Update is called once per frame
          private void FixedUpdate()
          {
-             ComputeMovement();  
+             ComputeForwardMovement();
+             ComputeVerticalMovement();   
              ComputeRotation();
 
              if(m_PlayerInput.IsMoveInput)
@@ -60,23 +63,35 @@ namespace RPG
          }
          private void OnAnimatorMove()
          {
-             m_ChController.Move(m_Animator.deltaPosition);
+             // add gravity component by using vector3
+             Vector3 movement = m_Animator.deltaPosition;
+             movement += m_VerticalSpeed * Vector3.up * Time.fixedDeltaTime;
+             m_ChController.Move(movement);
          }
-         private void ComputeMovement()
+         private void  ComputeVerticalMovement()
+         {
+             //add gravity
+             m_VerticalSpeed = -gravity;
+             
+         }
+         private void ComputeForwardMovement()
          {
              //using Animation function which has position changing OK to only adding Vector
              Vector3 moveInput = m_PlayerInput.MoveInput.normalized;
              m_DesiredForwardSpeed = moveInput.magnitude * maxForwardSpeed;
 
-             Debug.Log(m_PlayerInput.IsMoveInput);
+             Debug.Log("Desired: " + m_DesiredForwardSpeed);
+             Debug.Log("Forward: " + m_ForwardSpeed);
+
              float acceleration = m_PlayerInput.IsMoveInput ? k_Acceleration : k_Deceleration; // if true->k_Acceleration, false-> Deceleration
 
 
              m_ForwardSpeed = Mathf.MoveTowards(m_ForwardSpeed, m_DesiredForwardSpeed, Time.fixedDeltaTime * acceleration); 
                     
-              m_Animator.SetFloat(m_HashForwardSpeed, moveInput.magnitude);
+              m_Animator.SetFloat(m_HashForwardSpeed, m_ForwardSpeed); 
 
          }
+         
          private void ComputeRotation()
          {
               Vector3 moveInput = m_PlayerInput.MoveInput.normalized;

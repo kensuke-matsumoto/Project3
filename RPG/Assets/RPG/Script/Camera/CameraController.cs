@@ -12,6 +12,8 @@ namespace RPG
     CinemachineFreeLook freeLookCamera;
     public CinemachineFreeLook PlayerCam
     {
+
+        
         get
         {
             return freeLookCamera;

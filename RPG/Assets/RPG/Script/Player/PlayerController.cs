@@ -6,14 +6,21 @@ namespace RPG
 {
     public class PlayerController : MonoBehaviour
     {
-        const float k_Acceleration = 20.0f;
-        const float k_Deceleration = 500.0f;
+        public static PlayerController Instance
+        {
+            get
+            {
+                return s_Instance;
+            }
+        }
+        
         public float maxForwardSpeed = 8.0f;
         public float rotationSpeed; 
         public float m_MaxRotationSpeed = 1200f;
         public float m_MinRotationSpeed = 800f;
         public float gravity = 20.0f;
 
+        private static PlayerController s_Instance;
         private Quaternion m_TagetRotation;
              
 
@@ -29,6 +36,8 @@ namespace RPG
         private float m_VerticalSpeed;
         
         private readonly int m_HashForwardSpeed = Animator.StringToHash("ForwardSpeed");  
+        const float k_Acceleration = 20.0f;
+        const float k_Deceleration = 500.0f;
 
         void Awake()
         {
@@ -36,6 +45,9 @@ namespace RPG
             m_PlayerInput = GetComponent<PlayerInput>();
             m_CameraController = Camera.main.GetComponent<CameraController>();
             m_Animator = GetComponent<Animator>();
+
+            s_Instance = this;
+
 
 
         }
@@ -49,6 +61,8 @@ namespace RPG
              ComputeForwardMovement();
              ComputeVerticalMovement();   
              ComputeRotation();
+             
+
 
              if(m_PlayerInput.IsMoveInput)
              {
@@ -63,6 +77,8 @@ namespace RPG
          }
          private void OnAnimatorMove()
          {
+            
+
              // add gravity component by using vector3
              Vector3 movement = m_Animator.deltaPosition;
              movement += m_VerticalSpeed * Vector3.up * Time.fixedDeltaTime;
@@ -73,15 +89,17 @@ namespace RPG
              //add gravity
              m_VerticalSpeed = -gravity;
              
+             
          }
          private void ComputeForwardMovement()
          {
+            
              //using Animation function which has position changing OK to only adding Vector
              Vector3 moveInput = m_PlayerInput.MoveInput.normalized;
              m_DesiredForwardSpeed = moveInput.magnitude * maxForwardSpeed;
 
-             Debug.Log("Desired: " + m_DesiredForwardSpeed);
-             Debug.Log("Forward: " + m_ForwardSpeed);
+             //Debug.Log("Desired: " + m_DesiredForwardSpeed);
+             //Debug.Log("Forward: " + m_ForwardSpeed);
 
              float acceleration = m_PlayerInput.IsMoveInput ? k_Acceleration : k_Deceleration; // if true->k_Acceleration, false-> Deceleration
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace RPG
 {
@@ -8,13 +9,22 @@ namespace RPG
     {
       public float detectionRadius = 10.0f;
       public float detectionAngle = 90.0f; 
-        private void Start()
+      private PlayerController m_Target;
+      private NavMeshAgent m_NavMeshAgent; 
+        private void Awake()
         {
-          Debug.Log(PlayerController.Instance);
+          m_NavMeshAgent = GetComponent<NavMeshAgent>();
         }
         private void Update()
         {
-          LookForPlayer();
+          m_Target = LookForPlayer();
+          if(!m_Target)
+          {
+            return;
+          }
+          Vector3 targetPosition = m_Target.transform.position;
+          m_NavMeshAgent.SetDestination(targetPosition);
+
 
         }
         private PlayerController LookForPlayer()
@@ -35,7 +45,7 @@ namespace RPG
           {
             if(Vector3.Dot(toPlayer.normalized, transform.forward) > Mathf.Cos(detectionAngle * 0.5f * Mathf.Deg2Rad))
             {
-              Debug.Log("Player has been detected !!");
+              return PlayerController.Instance;
 
             }
             //Debug.Log("Detecting Player!!");            

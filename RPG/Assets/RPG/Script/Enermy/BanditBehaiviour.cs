@@ -9,22 +9,48 @@ namespace RPG
     {
       public float detectionRadius = 10.0f;
       public float detectionAngle = 90.0f; 
+      public float timeToStopPursuit = 2.0f;
       private PlayerController m_Target;
       private NavMeshAgent m_NavMeshAgent; 
+      private float m_TimeSinceLostTarget = 0;
+
         private void Awake()
         {
           m_NavMeshAgent = GetComponent<NavMeshAgent>();
         }
         private void Update()
         {
-          m_Target = LookForPlayer();
-          if(!m_Target)
+          var target = LookForPlayer();
+          if(m_Target == null)
           {
-            return;
-          }
-          Vector3 targetPosition = m_Target.transform.position;
-          m_NavMeshAgent.SetDestination(targetPosition);
+            if(target != null)
+            {
+              m_Target = target;
 
+            }
+          }
+          else
+          {  
+            m_NavMeshAgent.SetDestination(m_Target.transform.position);
+            if(target == null) 
+            {
+              m_TimeSinceLostTarget += Time.deltaTime;
+              if(m_TimeSinceLostTarget >= timeToStopPursuit)
+              {
+                m_Target = null;
+                Debug.Log("stopping enermy !!");
+                
+
+              }
+            } 
+            else
+            {
+              m_TimeSinceLostTarget = 0;
+
+            }     
+           
+          }
+          
 
         }
         private PlayerController LookForPlayer()

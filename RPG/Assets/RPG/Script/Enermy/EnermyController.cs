@@ -25,6 +25,10 @@ public class EnermyController : MonoBehaviour
               (m_Animator.deltaPosition / Time.fixedDeltaTime).magnitude * m_SpeedModifier;
 
     }
+    public bool SetFollowTarget(Vector3 position)
+    {
+        return m_NavMeshAgent.SetDestination(position); // bool type need "return" ?
+    }
 
 
 

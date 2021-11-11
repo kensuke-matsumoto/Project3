@@ -14,6 +14,7 @@ namespace RPG
             }
         }
         
+        public MeleeWepon meleeWepon;
         public float maxForwardSpeed = 8.0f;
         public float rotationSpeed; 
         public float m_MaxRotationSpeed = 1200f;
@@ -77,6 +78,8 @@ namespace RPG
              if(m_PlayerInput.IsAtack)
              {
                 m_Animator.SetTrigger(m_HashMeleeAttack);
+                meleeWepon.BeginAttack();
+
 
             
              }
@@ -86,9 +89,7 @@ namespace RPG
            
          }
          private void OnAnimatorMove()
-         {
-            
-
+         {           
              // add gravity component by using vector3
              Vector3 movement = m_Animator.deltaPosition;
              movement += m_VerticalSpeed * Vector3.up * Time.fixedDeltaTime;
@@ -97,9 +98,8 @@ namespace RPG
          private void  ComputeVerticalMovement()
          {
              //add gravity
-             m_VerticalSpeed = -gravity;
-             
-             
+             m_VerticalSpeed = -gravity;         
+           
          }
          private void ComputeForwardMovement()
          {

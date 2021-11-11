@@ -11,7 +11,11 @@ namespace RPG
       public float timeToStopPursuit = 2.0f;
       public float timeToWaitOnPursuit = 2.0f;
       public float attackDistance = 1.1f;
-      private PlayerController m_Target;
+      public bool HasFollowTarget
+      {
+        get{return m_FollowTarget != null;}
+      }
+      private PlayerController m_FollowTarget;
       private EnermyController m_EnermyController;
      
       private Animator m_Animator;
@@ -34,19 +38,28 @@ namespace RPG
         }
         private void Update()
         {
-          var target = playerScanner.Detect(transform);
-          if(m_Target == null)
+          var detectedTarget = playerScanner.Detect(transform);
+          bool hasDetectedTarget = detectedTarget != null;
+
+          if(hasDetectedTarget){ m_FollowTarget = detectedTarget; }
+
+          if(HasFollowTarget)
           {
-            if(target != null)
+            AttackOrFollowTarget();
+            if(hasDetectedTarget)
             {
-              m_Target = target;
-
+              m_TimeSinceLostTarget = 0;
             }
-          }
-          else
-          {       
-
-            Vector3 toTarget = m_Target.transform.position - transform.position;
+            else
+            {
+             StopPursuit(); 
+            }
+          }       
+          CheckIfNearBase();         
+        }
+        private void AttackOrFollowTarget()
+        {
+          Vector3 toTarget = m_FollowTarget.transform.position - transform.position;
             if(toTarget.magnitude <= attackDistance)
             {
               m_EnermyController.StopFollowTarget();
@@ -56,31 +69,22 @@ namespace RPG
             else
             {
               m_Animator.SetBool(m_HashInPursuit, true); 
-              m_EnermyController.FollowTarget(m_Target.transform.position);
-
+              m_EnermyController.FollowTarget(m_FollowTarget.transform.position);
             }
-
-            if(target == null) 
-            {
-              m_TimeSinceLostTarget += Time.deltaTime;
+        }
+        private void StopPursuit()
+        {
+          m_TimeSinceLostTarget += Time.deltaTime;
               if(m_TimeSinceLostTarget >= timeToStopPursuit)
               {
-                m_Target = null;
+                m_FollowTarget = null;
                 
                 m_Animator.SetBool(m_HashInPursuit, false);
-                StartCoroutine(WaitOnPursuit());
-             
-
-
-              }
-            } 
-            else
-            {
-              m_TimeSinceLostTarget = 0;
-
-            }     
-           
-          }
+                StartCoroutine(WaitOnPursuit());           
+              }         
+        }
+        private void CheckIfNearBase()
+        {
           Vector3 toBase = m_OriginPosition - transform.position;
           toBase.y = 0;
 
@@ -91,17 +95,14 @@ namespace RPG
           {
             Quaternion targetRotation =Quaternion.RotateTowards(transform.rotation, m_OriginRotation, 360 * Time.deltaTime);
             transform.rotation = targetRotation;
-
-          }
-
-          
-
+          }        
         }
         private IEnumerator WaitOnPursuit()
         {
           yield return new WaitForSeconds(timeToWaitOnPursuit);
           m_EnermyController.FollowTarget(m_OriginPosition);      
         }
+        
 
        
 

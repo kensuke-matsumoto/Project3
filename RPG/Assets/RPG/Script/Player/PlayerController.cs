@@ -35,7 +35,8 @@ namespace RPG
         private float m_ForwardSpeed;
         private float m_VerticalSpeed;
         
-        private readonly int m_HashForwardSpeed = Animator.StringToHash("ForwardSpeed");  
+        private readonly int m_HashForwardSpeed = Animator.StringToHash("ForwardSpeed");
+        private readonly int m_HashMeleeAttack = Animator.StringToHash("MeleeAttack");  
         const float k_Acceleration = 20.0f;
         const float k_Deceleration = 500.0f;
 
@@ -71,9 +72,12 @@ namespace RPG
                  transform.rotation = m_TagetRotation;
              }
 
+             m_Animator.ResetTrigger(m_HashMeleeAttack);
+
              if(m_PlayerInput.IsAtack)
              {
-                // Debug.Log("OK");
+                m_Animator.SetTrigger(m_HashMeleeAttack);
+
             
              }
 

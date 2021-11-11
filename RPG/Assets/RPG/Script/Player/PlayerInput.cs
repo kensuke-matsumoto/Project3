@@ -11,6 +11,7 @@ namespace RPG
     //public Vector2 MoveInput
 
     private Vector3 m_Movement;
+    private bool m_IsAttack;
     public Vector3 MoveInput
     {
         get
@@ -27,10 +28,24 @@ namespace RPG
         }
     }
 
+    public bool IsAtack
+    {
+        get
+        {
+            return m_IsAttack;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
         m_Movement.Set(Input.GetAxis("Horizontal"),0, Input.GetAxis("Vertical"));
+
+        if(Input.GetButtonDown("Fire1"))
+        {
+            m_IsAttack = true;
+            
+        }
 
         
     }

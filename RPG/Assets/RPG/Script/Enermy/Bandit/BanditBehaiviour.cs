@@ -10,21 +10,25 @@ namespace RPG
       public PlayerScanner playerScanner;
       public float timeToStopPursuit = 2.0f;
       public float timeToWaitOnPursuit = 2.0f;
+      public float attackDistance = 1.1f;
       private PlayerController m_Target;
       private EnermyController m_EnermyController;
      
       private Animator m_Animator;
       private float m_TimeSinceLostTarget = 0;
       private Vector3 m_OriginPosition;
+      private Quaternion m_OriginRotation;
        private readonly int m_HashInPursuit = Animator.StringToHash("InPursuit");
-       private readonly int m_HashNearBase = Animator.StringToHash("NearBase");    
+       private readonly int m_HashNearBase = Animator.StringToHash("NearBase");
+      private readonly int m_HashAttack = Animator.StringToHash("Attack");      
 
         private void Awake()
         {
           m_EnermyController = GetComponent<EnermyController>();
-          m_Animator = GetComponent<Animator>();        
+          m_Animator = GetComponent<Animator>(); 
+          m_OriginRotation = transform.rotation;       
           m_OriginPosition = transform.position;
-          Debug.Log("Hello !");
+          //Debug.Log("Hello !");
 
 
         }
@@ -40,9 +44,21 @@ namespace RPG
             }
           }
           else
-          {  
-            m_EnermyController.SetFollowTarget(m_Target.transform.position);
-            m_Animator.SetBool(m_HashInPursuit, true);
+          {       
+
+            Vector3 toTarget = m_Target.transform.position - transform.position;
+            if(toTarget.magnitude <= attackDistance)
+            {
+              m_EnermyController.StopFollowTarget();
+             
+              m_Animator.SetTrigger(m_HashAttack);          
+            }
+            else
+            {
+              m_Animator.SetBool(m_HashInPursuit, true); 
+              m_EnermyController.FollowTarget(m_Target.transform.position);
+
+            }
 
             if(target == null) 
             {
@@ -67,14 +83,24 @@ namespace RPG
           }
           Vector3 toBase = m_OriginPosition - transform.position;
           toBase.y = 0;
-          m_Animator.SetBool(m_HashNearBase, toBase.magnitude < 0.01f);
+
+          bool nearBase = toBase.magnitude < 0.01f ;
+          m_Animator.SetBool(m_HashNearBase, nearBase);
+
+          if(nearBase)
+          {
+            Quaternion targetRotation =Quaternion.RotateTowards(transform.rotation, m_OriginRotation, 360 * Time.deltaTime);
+            transform.rotation = targetRotation;
+
+          }
+
           
 
         }
         private IEnumerator WaitOnPursuit()
         {
           yield return new WaitForSeconds(timeToWaitOnPursuit);
-          m_EnermyController.SetFollowTarget(m_OriginPosition);      
+          m_EnermyController.FollowTarget(m_OriginPosition);      
         }
 
        

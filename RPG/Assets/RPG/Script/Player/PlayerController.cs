@@ -71,6 +71,12 @@ namespace RPG
                  transform.rotation = m_TagetRotation;
              }
 
+             if(m_PlayerInput.IsAtack)
+             {
+                // Debug.Log("OK");
+            
+             }
+
                  
 
            

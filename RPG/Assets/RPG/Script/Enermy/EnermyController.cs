@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using RPG;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnermyController : MonoBehaviour
+
+
+public class EnermyController : MonoBehaviour, IAttackAnimListener
 {
     private NavMeshAgent m_NavMeshAgent;
     private Animator m_Animator;
@@ -40,7 +43,11 @@ public class EnermyController : MonoBehaviour
         m_NavMeshAgent.enabled = false;
     }
 
+    public void MeleeAttackStart()
+    {      
+    }
 
-
-   
+    public void MeleeAttackEnd()
+    {        
+    }
 }

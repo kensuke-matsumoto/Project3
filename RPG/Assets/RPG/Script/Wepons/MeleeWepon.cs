@@ -19,6 +19,7 @@ namespace RPG
 
        private bool m_IsAttack = false;
        private Vector3[] m_OriginAttackPos;
+       private RaycastHit[] m_rayCastHitCash = new RaycastHit[32];
 
        private void FixedUpdate()
        {
@@ -31,10 +32,20 @@ namespace RPG
 
                    //Debug.Log(WorldPos);
 
-                   Vector3 attackVector = WorldPos - m_OriginAttackPos[i];
+                   Vector3 attackVector = (WorldPos - m_OriginAttackPos[i]).normalized *0.1f;
 
-                   Ray r = new Ray(WorldPos, attackVector);
+                   Ray ray = new Ray(WorldPos, attackVector);
                    Debug.DrawRay(WorldPos, attackVector, Color.red, 4.0f);
+
+                   int contact = Physics.SphereCastNonAlloc(
+                       ray,
+                       ap.radius,
+                       m_rayCastHitCash,
+                       attackVector.magnitude,
+                       ~0,
+                       QueryTriggerInteraction.Ignore);
+
+                   m_OriginAttackPos[0] = WorldPos;
                }
            }
        }

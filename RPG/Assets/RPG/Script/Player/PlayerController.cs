@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RPG
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour , IAttackAnimListener
     {
         public static PlayerController Instance
         {
@@ -91,15 +91,15 @@ namespace RPG
              movement += m_VerticalSpeed * Vector3.up * Time.fixedDeltaTime;
              m_ChController.Move(movement);
          }
+   
          public void MeleeAttackStart()
          {
             meleeWepon.BeginAttack();
-
          }
+    
          public void MeleeAttackEnd()
          {
             meleeWepon.EndAttack();
-
          }
          private void  ComputeVerticalMovement()
          {

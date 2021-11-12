@@ -38,6 +38,10 @@ namespace RPG
         }
         private void Update()
         {
+          GuardPosition();
+        }
+        private void GuardPosition()
+        {
           var detectedTarget = playerScanner.Detect(transform);
           bool hasDetectedTarget = detectedTarget != null;
 
@@ -56,20 +60,18 @@ namespace RPG
             }
           }       
           CheckIfNearBase();         
+
         }
         private void AttackOrFollowTarget()
         {
           Vector3 toTarget = m_FollowTarget.transform.position - transform.position;
             if(toTarget.magnitude <= attackDistance)
             {
-              m_EnermyController.StopFollowTarget();
-             
-              m_Animator.SetTrigger(m_HashAttack);          
+              AttackTarget(toTarget);       
             }
             else
             {
-              m_Animator.SetBool(m_HashInPursuit, true); 
-              m_EnermyController.FollowTarget(m_FollowTarget.transform.position);
+              FollowTarget();              
             }
         }
         private void StopPursuit()
@@ -80,8 +82,21 @@ namespace RPG
                 m_FollowTarget = null;
                 
                 m_Animator.SetBool(m_HashInPursuit, false);
-                StartCoroutine(WaitOnPursuit());           
+                StartCoroutine(WaitBeforeReturn());           
               }         
+        }
+        private void AttackTarget(Vector3 toTarget)
+        {
+          var toTargetRotation = Quaternion.LookRotation(toTarget);
+              transform.rotation = Quaternion.RotateTowards(transform.rotation, toTargetRotation, 180 * Time.deltaTime);
+              m_EnermyController.StopFollowTarget();
+             
+              m_Animator.SetTrigger(m_HashAttack);
+        }
+        private void FollowTarget()
+        {
+          m_Animator.SetBool(m_HashInPursuit, true); 
+          m_EnermyController.FollowTarget(m_FollowTarget.transform.position);
         }
         private void CheckIfNearBase()
         {
@@ -97,7 +112,7 @@ namespace RPG
             transform.rotation = targetRotation;
           }        
         }
-        private IEnumerator WaitOnPursuit()
+        private IEnumerator WaitBeforeReturn()
         {
           yield return new WaitForSeconds(timeToWaitOnPursuit);
           m_EnermyController.FollowTarget(m_OriginPosition);      
@@ -121,6 +136,11 @@ namespace RPG
                                           Vector3.up, rotatedForward,
                                           playerScanner.detectionAngle,
                                           playerScanner.detectionRadius);
+
+         UnityEditor.Handles.DrawSolidArc(transform.position,
+                                          Vector3.up, rotatedForward,
+                                          360,
+                                          playerScanner.meleeDetectionRadius);
         }
 #endif
     }

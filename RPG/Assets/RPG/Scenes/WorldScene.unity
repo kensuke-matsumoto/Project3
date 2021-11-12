@@ -1932,6 +1932,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2018704605 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4736956713273624549, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+  m_PrefabInstance: {fileID: 4281681477470569681}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &156130714981316355
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1946,6 +1951,10 @@ PrefabInstance:
     - target: {fileID: 3274372390299267538, guid: 1952eb735835a2a4b973695369407b7c, type: 3}
       propertyPath: timeToWaitOnPursuit
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3274372390299267538, guid: 1952eb735835a2a4b973695369407b7c, type: 3}
+      propertyPath: playerScanner.meleeDetectionRadius
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4008468709449934412, guid: 1952eb735835a2a4b973695369407b7c, type: 3}
       propertyPath: m_Name
@@ -2126,5 +2135,65 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sword_1
       objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoint.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoint.Array.data[1].radius
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[0].radius
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[1].radius
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[0].offset.x
+      value: -0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[0].offset.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[0].offset.z
+      value: 0.83
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[1].offset.x
+      value: -0.17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[1].offset.y
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[1].offset.z
+      value: 0.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoint.Array.data[0].rootTransform
+      value: 
+      objectReference: {fileID: 2018704605}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoint.Array.data[1].rootTransform
+      value: 
+      objectReference: {fileID: 2018704605}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[0].rootTransform
+      value: 
+      objectReference: {fileID: 2018704605}
+    - target: {fileID: 6855965935172173543, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}
+      propertyPath: attackPoints.Array.data[1].rootTransform
+      value: 
+      objectReference: {fileID: 2018704605}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6fa79db2a0ac4c4f8b7f940f9166875, type: 3}

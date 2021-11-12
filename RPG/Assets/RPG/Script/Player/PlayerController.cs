@@ -77,11 +77,7 @@ namespace RPG
 
              if(m_PlayerInput.IsAtack)
              {
-                m_Animator.SetTrigger(m_HashMeleeAttack);
-                meleeWepon.BeginAttack();
-
-
-            
+                m_Animator.SetTrigger(m_HashMeleeAttack);          
              }
 
                  
@@ -94,6 +90,16 @@ namespace RPG
              Vector3 movement = m_Animator.deltaPosition;
              movement += m_VerticalSpeed * Vector3.up * Time.fixedDeltaTime;
              m_ChController.Move(movement);
+         }
+         public void MeleeAttackStart()
+         {
+            meleeWepon.BeginAttack();
+
+         }
+         public void MeleeAttackEnd()
+         {
+            meleeWepon.EndAttack();
+
          }
          private void  ComputeVerticalMovement()
          {

@@ -18,18 +18,19 @@ namespace RPG
       private PlayerController m_FollowTarget;
       private EnermyController m_EnermyController;
      
-      private Animator m_Animator;
+     
       private float m_TimeSinceLostTarget = 0;
       private Vector3 m_OriginPosition;
       private Quaternion m_OriginRotation;
        private readonly int m_HashInPursuit = Animator.StringToHash("InPursuit");
        private readonly int m_HashNearBase = Animator.StringToHash("NearBase");
-      private readonly int m_HashAttack = Animator.StringToHash("Attack");      
+      private readonly int m_HashAttack = Animator.StringToHash("Attack");
+      private readonly int m_HashHurt = Animator.StringToHash("Hurt");
+      private readonly int m_HashDead = Animator.StringToHash("Dead");                 
 
         private void Awake()
         {
           m_EnermyController = GetComponent<EnermyController>();
-          m_Animator = GetComponent<Animator>(); 
           m_OriginRotation = transform.rotation;       
           m_OriginPosition = transform.position;
           //Debug.Log("Hello !");
@@ -64,7 +65,29 @@ namespace RPG
         }
         public void OneReceiveMessage(MessageType type)
         {
-          Debug.Log("Bandit Behaiviour : " + type);
+          switch(type)
+          {
+            case MessageType.DEAD:
+                 OnDead();
+                 break;
+            case MessageType.DAMAGED:
+                 OnReceiveDamage();
+                 break;
+            default:
+                 break;
+
+          }
+
+        }
+        private void OnDead()
+        {
+          m_EnermyController.StopFollowTarget();
+          m_EnermyController.Animator.SetTrigger(m_HashDead);
+        }
+
+        private void OnReceiveDamage()
+        {
+         m_EnermyController.Animator.SetTrigger(m_HashHurt);
 
         }
         private void AttackOrFollowTarget()
@@ -86,7 +109,7 @@ namespace RPG
               {
                 m_FollowTarget = null;
                 
-                m_Animator.SetBool(m_HashInPursuit, false);
+                m_EnermyController.Animator.SetBool(m_HashInPursuit, false);
                 StartCoroutine(WaitBeforeReturn());           
               }         
         }
@@ -96,11 +119,11 @@ namespace RPG
               transform.rotation = Quaternion.RotateTowards(transform.rotation, toTargetRotation, 180 * Time.deltaTime);
               m_EnermyController.StopFollowTarget();
              
-              m_Animator.SetTrigger(m_HashAttack);
+              m_EnermyController.Animator.SetTrigger(m_HashAttack);
         }
         private void FollowTarget()
         {
-          m_Animator.SetBool(m_HashInPursuit, true); 
+          m_EnermyController.Animator.SetBool(m_HashInPursuit, true); 
           m_EnermyController.FollowTarget(m_FollowTarget.transform.position);
         }
         private void CheckIfNearBase()
@@ -109,7 +132,7 @@ namespace RPG
           toBase.y = 0;
 
           bool nearBase = toBase.magnitude < 0.01f ;
-          m_Animator.SetBool(m_HashNearBase, nearBase);
+          m_EnermyController.Animator.SetBool(m_HashNearBase, nearBase);
 
           if(nearBase)
           {

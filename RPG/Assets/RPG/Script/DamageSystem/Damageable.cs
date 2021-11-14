@@ -10,10 +10,14 @@ namespace RPG
       
        [Range(0, 360f)]
        public float hitAngle = 360.0f;
+       public float invulnerabilityTime = 0.5f;
       public int maxHitPoint;
       public int CurrentHitPoint {get; private set; }
 
       public List<MonoBehaviour> onDamageMessageReceivers;
+      private bool m_IsInvulnerable = false;
+      private float m_TimeSinceLastHit = 0.0f;
+
      
 
       private void Awake()
@@ -21,9 +25,25 @@ namespace RPG
          CurrentHitPoint = maxHitPoint;
       }
 
+      private void Update()
+      {
+         if(m_IsInvulnerable)
+         {
+            m_TimeSinceLastHit += Time.deltaTime;
+
+            if(m_TimeSinceLastHit >= invulnerabilityTime)
+            {
+               m_IsInvulnerable = false;
+               m_TimeSinceLastHit = 0;
+            }
+
+         }
+
+      }
+
        public void ApplyDamage(DamageMessage data)
         {
-           if(CurrentHitPoint <= 0)
+           if(CurrentHitPoint <= 0 || m_IsInvulnerable)
            {
               return;
            }
@@ -36,6 +56,8 @@ namespace RPG
            {
               return;
            }
+           m_IsInvulnerable = true;
+
            CurrentHitPoint -= data.amount;
 
            var messageType = CurrentHitPoint <= 0 ? MessageType.DEAD : MessageType.DAMAGED;

@@ -37,13 +37,24 @@ namespace RPG
                    Ray ray = new Ray(WorldPos, attackVector);
                    Debug.DrawRay(WorldPos, attackVector, Color.red, 4.0f);
 
-                   int contact = Physics.SphereCastNonAlloc(
+                   int contacts = Physics.SphereCastNonAlloc(
                        ray,
                        ap.radius,
                        m_rayCastHitCash,
                        attackVector.magnitude,
                        ~0,
                        QueryTriggerInteraction.Ignore);
+                    
+                   
+                    for (int k = 0; k < contacts; k++)
+                    {
+                        Collider collider = m_rayCastHitCash[k].collider;
+                        if(collider != null)
+                        {
+                            Debug.Log("Hit Hit !!");
+
+                        }
+                    }
 
                    m_OriginAttackPos[0] = WorldPos;
                }

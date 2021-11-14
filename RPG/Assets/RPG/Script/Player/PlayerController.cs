@@ -47,11 +47,9 @@ namespace RPG
             m_PlayerInput = GetComponent<PlayerInput>();
             m_CameraController = Camera.main.GetComponent<CameraController>();
             m_Animator = GetComponent<Animator>();
-
             s_Instance = this;
 
-
-
+            meleeWepon.SetOwner(gameObject);
         }
     
 

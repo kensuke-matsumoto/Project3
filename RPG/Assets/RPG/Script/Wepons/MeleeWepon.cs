@@ -14,12 +14,15 @@ namespace RPG
             public Vector3 offset;
             public Transform rootTransform;
         }
+
+       public LayerMask targetLayers;
        public int damage;
        public AttackPoint[] attackPoints = new AttackPoint[0];
 
        private bool m_IsAttack = false;
        private Vector3[] m_OriginAttackPos;
        private RaycastHit[] m_rayCastHitCash = new RaycastHit[32];
+       private GameObject m_Owner;
 
        private void FixedUpdate()
        {
@@ -51,14 +54,39 @@ namespace RPG
                         Collider collider = m_rayCastHitCash[k].collider;
                         if(collider != null)
                         {
-                            Debug.Log("Hit Hit !!");
-
+                           CheckDamage(collider, ap); 
                         }
                     }
 
                    m_OriginAttackPos[0] = WorldPos;
                }
            }
+       }
+       private void CheckDamage(Collider other, AttackPoint ap)
+       {
+           Damageable damageable = other.GetComponent<Damageable>();
+
+           if((targetLayers.value & (1 << other.gameObject.layer)) == 0)
+           {
+               return;
+           }
+           //Debug.Log("We are hitting correct layer");
+           //Debug.Log(other.gameObject.layer);
+
+
+           if(damageable != null)
+           {
+               Damageable.DamageMessage data;
+               data.amount = damage;
+               data.damager = this;
+               data.damageSource = m_Owner.transform.position;
+               damageable.ApplyDamage(data);
+           }
+
+       }
+       public void SetOwner(GameObject owner)
+       {
+           m_Owner = owner ;
        }
 
        public void BeginAttack()
